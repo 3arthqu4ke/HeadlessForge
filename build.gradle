@@ -1,0 +1,140 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = 'https://files.minecraftforge.net/maven'}
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/'}
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'kotlin'
+
+version = '1.0'
+group = 'me.earth.headlessforge'
+archivesBaseName = 'headlessforge'
+
+compileKotlin {
+    logger.info("Hello: ${project.rootDir}")
+    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.useIR = true
+}
+
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    mappings channel: 'stable', version: '39-1.12'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'fml.coreMods.load', 'me.earth.headlessforge.HeadlessForge'
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+configurations {
+    jarLibs
+}
+
+repositories {
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/'}
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+
+    jarLibs('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'commons-io'
+        exclude module: 'gson'
+        exclude module: 'guava'
+        exclude module: 'launchwrapper'
+        exclude module: 'log4j-core'
+    }
+
+    annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
+        exclude module: 'gson'
+    }
+
+    jarLibs("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version") {
+        exclude module: 'kotlin-stdlib-common'
+        exclude module: 'annotations'
+    }
+
+    jarLibs("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version") {
+        exclude module: 'kotlin-stdlib-common'
+        exclude module: 'annotations'
+    }
+
+    jarLibs("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version") {
+        exclude module: 'kotlin-stdlib-common'
+        exclude module: 'annotations'
+    }
+
+    jarLibs("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version") {
+        exclude module: 'kotlin-stdlib-common'
+        exclude module: 'annotations'
+    }
+
+    jarLibs("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version") {
+        exclude module: 'kotlin-stdlib-common'
+        exclude module: 'annotations'
+    }
+
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+    compileOnly 'org.jetbrains:annotations:20.1.0'
+
+    implementation configurations.jarLibs
+}
+
+mixin {
+    defaultObfuscationEnv 'searge'
+    add sourceSets.main, 'mixins.headlessforge.refmap.json'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            'Manifest-Version': 1.0,
+            'MixinConfigs': 'mixins.headlessforge.json',
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'TweakOrder': 0,
+            'FMLCorePlugin': 'me.earth.headlessforge.HeadlessForge',
+            'Main-Class': 'me.earth.headlessforge.launch.Main'
+        ])
+    }
+
+    from {
+        configurations.jarLibs.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+jar.finalizedBy('reobfJar')

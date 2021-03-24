@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.7.11",
+  "package": "me.earth.headlessforge.mixin",
+  "refmap": "mixins.headlessforge.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinLoadingScreenRenderer",
+    "MixinMinecraft",
+    "forge.MixinFMLClientHandler",
+    "gui.MixinFontRenderer",
+    "gui.MixinGuiDisconnected",
+    "gui.MixinGuiScreen",
+    "renderer.MixinDynamicTexture",
+    "renderer.MixinGlStateManager",
+    "renderer.MixinRenderGlobal",
+    "renderer.MixinTextureManager",
+    "renderer.MixinTextureUtil",
+    "resources.MixinSimpleReloadableResourceManager",
+    "settings.MixinKeyBinding",
+    "util.MixinMouseHelper"
+  ],
+  "injectors": {
+    "maxShiftBy": 10
+  }
+}
