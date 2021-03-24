@@ -1,4 +1,4 @@
-#HeadlessForge
+# HeadlessForge
 While headless Minecraft Clients aren't anything new, they come with a drawback.
 The Minecraft API is missing and you need to add all functionality yourself. 
 That means getting mods like Baritone which are tightly coupled with mojangs 
