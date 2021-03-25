@@ -3,7 +3,6 @@ package me.earth.headlessforge.launch
 import net.minecraft.launchwrapper.Launch
 import java.net.URL
 import java.net.URLClassLoader
-import java.nio.file.Files
 import java.nio.file.Paths
 
 class Main {
