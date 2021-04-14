@@ -348,4 +348,34 @@ public abstract class MixinMinecraft {
                              : guiScreenIn.getClass().getSimpleName()) + ".");
     }
 
+    @Redirect(
+        method = "runGameLoop",
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/lang/Thread;yield()V"))
+    private void yieldHook()
+    {
+        /*
+            This looks kinda bad, but it seems that without
+            the Display.update() call the game loop kinda
+            "runs hot". Meaning that after ca. 1-2 minutes
+            the game starts lagging. I'm afraid to touch this
+            since it works now.
+         */
+
+        try
+        {
+            if (Hooks.active())
+            {
+                Thread.sleep(1);
+            }
+        }
+        catch (InterruptedException e)
+        {
+            Thread.currentThread().interrupt();
+        }
+
+        Thread.yield();
+    }
+
 }

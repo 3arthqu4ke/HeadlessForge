@@ -1,6 +1,7 @@
 package me.earth.headlessforge.launch
 
 import net.minecraft.launchwrapper.Launch
+import java.io.File
 import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Paths
@@ -64,9 +65,11 @@ class Main {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            if (args.isEmpty()) {
-                println("Empty Arguments, please specify the path to the .minecraft folder!")
-                return
+            val p: String = if (args.isEmpty()) {
+                println("No .minecraft path given, assuming we are .minecraft/mods...")
+                File(Main::class.java.protectionDomain.codeSource.location.path).parentFile.parent
+            } else {
+                args[0]
             }
 
             println("Starting HeadlessForge with Arguments: " + args.contentToString())
@@ -75,7 +78,7 @@ class Main {
             addURL.isAccessible = true
 
             for (path in classPath) {
-                addURL.invoke(Main::class.java.classLoader, Paths.get(args[0] + path).toUri().toURL())
+                addURL.invoke(Main::class.java.classLoader, Paths.get(p + path).toUri().toURL())
             }
 
             if (args.size > 1) {
@@ -93,9 +96,9 @@ class Main {
             mcArgs.add("--version")
             mcArgs.add("1.12.2-forge-14.23.5.2854")
             mcArgs.add("--gameDir")
-            mcArgs.add(args[0])
+            mcArgs.add(p)
             mcArgs.add("--assetsDir")
-            mcArgs.add(args[0] + "/assets")
+            mcArgs.add("$p/assets")
             mcArgs.add("--accessToken") //
             mcArgs.add("{REDACTED}")
             mcArgs.add("--assetIndex")
