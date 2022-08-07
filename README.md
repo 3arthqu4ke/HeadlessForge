@@ -1,4 +1,5 @@
-This project is now archived. For the same and even better features take a look at [HeadlessMc](https://github.com/3arthqu4ke/HeadlessMc) and the [HeadlessMc-Specifics](https://github.com/3arthqu4ke/HMC-Specifics).
+> :warning: This project is now archived. For the same and even better features take a look at [HeadlessMc](https://github.com/3arthqu4ke/HeadlessMc) and the [HeadlessMc-Specifics](https://github.com/3arthqu4ke/HMC-Specifics).
+
 # HeadlessForge
 While headless Minecraft Clients aren't anything new, they come with a drawback.
 The Minecraft API is missing and you need to add all functionality yourself. 

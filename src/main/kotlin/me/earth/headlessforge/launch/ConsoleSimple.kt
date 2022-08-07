@@ -15,6 +15,11 @@ open class ConsoleSimple: IConsole {
     private var attached = false
 
     override fun attach(mc: Minecraft) {
+        if (System.getProperty("headlessforge.no.console", "false").toBoolean()) {
+            LOGGER.warn("Not attaching HeadlessForge console!")
+            return
+        }
+
         if (attached) {
             LOGGER.warn("Console is already attached!")
             return

@@ -18,7 +18,7 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'kotlin'
 
-version = '1.1'
+version = '1.2.0'
 group = 'me.earth.headlessforge'
 archivesBaseName = 'headlessforge'
 
